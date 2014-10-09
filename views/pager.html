@@ -1,0 +1,79 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/pager.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<script type="text/javascript" >
+var pageIndex=1;
+var pageCount=10;
+var allCount=0;
+var dataSource;
+$(function(){
+	$("#pager").pager({url:"/views/pager.html"},function(data){
+		if(data){
+			console.clear();
+			console.log(data);
+		}
+	});
+	pagerAjax(pageIndex,pageCount);
+
+	$("#first").on("click",function(){
+		pageIndex=1;
+		pagerAjax(pageIndex,pageCount);
+	})
+
+
+	$("#pre").on("click",function(){
+		pageIndex==1?1:pageIndex--;
+		pagerAjax(pageIndex,pageCount);
+	})
+
+	$("#next").on("click",function(){
+		var yu=allCount%pageCount;//取模
+		var i=yu==0?0:1;
+		pageIndex==parseInt(allCount/pageCount)+i?parseInt(allCount/pageCount)+i:pageIndex++;
+		pagerAjax(pageIndex,pageCount);
+	})
+
+	$("#last").on("click",function(){
+		pageIndex=parseInt(allCount/pageCount)+(allCount%pageCount==0?0:1);
+		pagerAjax(pageIndex,pageCount);
+	})
+})
+
+
+function pagerAjax(pageindex,pagecount){
+	$.ajax({
+	  type: 'POST',
+	  url: '/views/pager.html',
+	  data: { pageindex:pageindex,pagecount:pagecount},
+	  success: function(data){
+	  	 allCount=data.count;
+	  	 dataSource=data.data;
+	  	 $("#now").text(pageIndex);
+	  	 $("#all").text(parseInt(allCount/pageCount)+(allCount%pageCount==0?0:1));
+	  	 //console.clear();
+	  	 //console.log(dataSource);
+	  },
+	  error:function(err)
+		{
+			console.log(err);
+		},
+	  dataType: 'json'
+	});
+}
+</script>
+<style type="text/css">
+button{
+	margin-left:5px;
+
+}
+</style>
+</head>
+<body>
+	<div id="pager"></div>
+<button id="first"><<</button><button id="pre"><</button><button id="next">></button><button id="last">>></button>
+<span style="margin-left:50px"><label id="now">1</label>/<label id="all">100</label></span><span style="margin-left:50px"><a href="#">跳转到</a><input style="width:30px"></input>页</span>
+</body>
+</html>

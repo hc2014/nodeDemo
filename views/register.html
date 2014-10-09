@@ -1,0 +1,172 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.validate.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<script type="text/javascript" >
+
+	var err=false;
+	var ischeck=false;
+	$(function(){
+		 jQuery("#form1").validate({
+			 focusCleanup:true,focusInvalid:false,
+			 errorPlacement:function(err,element){//错误信息的位子
+				err.appendTo(element.parent().next().next()); 
+			 },
+			 rules: {//验证规则
+				username: {
+					required: true,
+					minlength: 5
+				},
+				nickname: {
+					required: true
+				},
+				pwd: {
+					required: true,
+					minlength: 6
+				},
+				rpwd: {
+					required: true,
+					minlength: 6,
+					equalTo: "#pwd"
+				},
+				email:{
+					required: true,
+					email:true
+				}
+			},
+			messages: {//错误提示消息
+				username: {
+					required: "请输入账号",
+					minlength: "最小5个长度"
+				},
+				nickname: {
+					required: "请输入昵称"
+				},
+				pwd: {
+					required: "请输入密码",
+					minlength: "最小6个长度"
+				},
+				rpwd: {
+					required: "再次输入密码",
+					minlength: "最小6个长度",
+					equalTo: "两次输入的密码不一样"
+				},
+				email:{
+					required: "请输入邮箱",
+					email:"请输入一个有效邮箱"
+				}
+			},
+			submitHandler:function(form){//表单submit事件
+			 if(ischeck==false){
+					layer.msg('请先检查用户是否存在!', 2);
+					return false;
+				}
+				if(err==false){
+					layer.msg('用户已经存在请重新输入!', 2)
+					return false;
+				}
+				$.ajax({
+				  type: 'POST',
+				  url: '/views/register.html',
+				  data: { username:$("#username").val(),type:"register",pwd:$("#pwd").val(),email:$("#email").val(),nickname:$("#nickname").val()},
+				  success: function(data){
+					  if(eval(data)=="ok"){
+						alert('注册成功,跳转到登陆界面!');
+						window.location.href="/views/login.html"; 
+					  }
+					else
+						alert(data);
+				  },
+				  error:function(err)
+					{
+						console.log(err);
+					},
+				  dataType: 'text'
+				});
+			}
+
+		}); 
+	});
+
+	function checkUser()
+	{
+		ischeck=true;
+		$.ajax({
+		  type: 'POST',
+		  url: '/views/register.html',
+		  data: { username:$("#username").val(),type:"checkUser"},
+		  success: function(data){
+			  if(data==0){
+				err=true;
+				$("#check").text("可以使用!");
+			  }
+			  else{
+				err=false;
+				$("#check").text("用户名已存在!");
+			  }  
+		  },
+		  error:function(err)
+			{
+				alert(err);
+			},
+		  dataType: 'text'
+		});
+	}
+</script>
+<style type="text/css">
+    label.error
+	{
+		color: Red;
+		padding-left: 20px;
+	}
+	input[type=text],[type=password]{
+		width:200px;
+		margin-top:5px;
+	}
+	button{
+		margin-top:5px;
+		margin-left:10px;
+	}
+ </style>
+</head>
+<body >
+<form id="form1">
+	<fieldset  style="width:500px; margin:50px auto">
+    <legend>用户注册</legend>
+		<table>
+			<tr>
+				<td>账号:</td><td><input  placeholder="Enter Account" class="form-control input-sm"  type="text" name="username" id="username"></td>
+				<td><button id="check" onclick="checkUser()">检测</button> </td><td></td>
+			<tr>
+			<tr>
+				<td>昵称</td><td><input  placeholder="Enter Nickname" class="form-control input-sm"  type="text" name="nickname" id="nickname"></td>
+				<td></td><td></td>
+			<tr>
+			<tr>
+				<td>密码:</td><td><input placeholder="Enter Password" type="password" class="form-control input-sm"  name="pwd" id="pwd"></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>重复密码:</td><td><input type="password" placeholder="Confirm Password"  class="form-control input-sm" name="rpwd" id="rpwd"></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>邮箱</td><td><input placeholder="Enter Email" type="password" class="form-control input-sm"  name="email" id="email"></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" style=" text-align:right"><button id="btn_res">注册</button></td>
+				<td></td>
+			</tr>
+		</table>
+  </fieldset>
+  </form>
+</body>
+</html>

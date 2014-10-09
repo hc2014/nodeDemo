@@ -1,0 +1,41 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<script type="text/javascript" >
+	function sub()
+	{	
+		$.ajax({
+		  type: 'POST',
+		  url: '/views/mailer.html',
+		  data: {username:$("#username").val(),email:$("#email").val() },
+		  success: function(data){	
+			alert(data);
+			window.location.href="/views/login.html";
+		  },
+		  dataType: 'json'
+		});
+	}
+
+</script>
+
+</head>
+<body >
+	<fieldset style="width:260px; margin:200px auto;padding-left: 10px">
+    <legend>修改密码</legend>
+    <div class="input-group">
+		<span class="input-group-addon">账号:</span>
+		<input style=" width:200px" class="form-control input-sm" placeholder="请填写正确的账号"  name="username" id="username" type="text" />
+	</div>
+	<div class="input-group" style="margin-top:3px">
+		<span class="input-group-addon">邮箱:</span>
+		<input style=" width:200px" class="form-control input-sm" type="email" name="email" id="email" type="text" />
+	</div>
+	<button name="sub" style="float:right; margin-top:3px" id="sub" class="btn btn-primary" onclick="sub()">确定</button>
+  </fieldset>
+</body>
+</html>

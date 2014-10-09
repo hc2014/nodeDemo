@@ -1,0 +1,350 @@
+﻿/*button */
+a.l-btn {
+  background-position: right 0;
+  font-size: 12px;
+  text-decoration: none;
+  display: inline-block;
+  zoom: 1;
+  height: 24px;
+  padding-right:8px;
+  cursor: pointer;
+  outline: none;
+}
+a.l-btn-plain {
+  padding-right: 5px;
+  border: 0;
+ /* padding: 1px 6px 1px 1px;*/
+}
+a.l-btn-disabled {
+  color: #ccc;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: default;
+}
+a.l-btn span.l-btn-left {
+  display: inline-block;
+  background-position: 0 -48px;
+  padding: 4px 0px 4px 8px;
+  line-height: 16px;
+  height: 16px;
+}
+a.l-btn-plain span.l-btn-left {
+  padding-left: 5px;
+}
+a.l-btn span span.l-btn-text {
+  display: inline-block;
+  vertical-align: baseline;
+  width: auto;
+  height: 16px;
+  line-height: 16px;
+  padding: 0;
+  margin: 0;
+}
+a.l-btn span span.l-btn-icon-left {
+  padding: 0 0 0 20px;
+  background-position: left center;
+}
+a.l-btn span span.l-btn-icon-right {
+  padding: 0 20px 0 0;
+  background-position: right center;
+}
+a.l-btn span span span.l-btn-empty {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+}
+a:hover.l-btn {
+  background-position: right -24px;
+  outline: none;
+  text-decoration: none;
+}
+a:hover.l-btn span.l-btn-left {
+  background-position: 0 bottom;
+}
+a:hover.l-btn-plain {
+  padding: 0 5px 0 0;
+}
+a:hover.l-btn-disabled {
+  background-position: right 0;
+}
+a:hover.l-btn-disabled span.l-btn-left {
+  background-position: 0 -48px;
+}
+a.l-btn .l-btn-focus {
+  outline: #0000FF dotted thin;
+}
+a.l-btn {
+  color: #444;
+  background-image: url('images/linkbutton_bg.png');
+  background-repeat: no-repeat;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 6px 5px 5px 5px;
+}
+a.l-btn span.l-btn-left {
+  background-image: url('images/linkbutton_bg.png');
+  background-repeat: no-repeat;
+}
+
+a.l-btn-plain,
+a.l-btn-plain span.l-btn-left {
+ /* background: transparent;
+  border: 0;
+  filter: none; */
+}
+a:hover.l-btn-plain {
+ /* background: #e6e6e6;
+  color: #00438a;
+  border: 1px solid #ddd;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;*/
+}
+a.l-btn-disabled,
+a:hover.l-btn-disabled {
+  filter: alpha(opacity=50);
+}
+
+.icon-blank
+{
+	background: url('icons/blank.gif') no-repeat;
+}
+.icon-add
+{
+	background: url('icons/add.png') no-repeat;
+}
+.icon-edit
+{
+	background: url('icons/edit.png') no-repeat;
+}
+.icon-remove
+{
+	background: url('icons/remove.png') no-repeat;
+}
+.icon-save
+{
+	background: url('icons/save.png') no-repeat;
+}
+.icon-list
+{
+	background: url('icons/list.png') 5px center no-repeat;
+}
+.icon-roule
+{
+	background: url('icons/roule.png') 5px center no-repeat;
+}
+.icon-toleft
+{
+	background: url('icons/toleft.png') no-repeat;
+}
+.icon-alltoleft
+{
+	background: url('icons/alltoleft.png') no-repeat;
+}
+.icon-toright
+{
+	background: url('icons/toright.png') no-repeat;
+}
+.icon-alltoright
+{
+	background: url('icons/alltoright.png') no-repeat;
+}
+
+.icon-gongneng
+{
+	background: url('icons/gongneng.png') no-repeat;
+}
+
+.icon-cut
+{
+	background: url('icons/cut.png') no-repeat;
+}
+.icon-ok
+{
+	background: url('icons/ok.png') no-repeat;
+}
+.icon-no
+{
+	background: url('icons/no.png') no-repeat;
+}
+.icon-cancel
+{
+	background: url('icons/cancel.png') no-repeat;
+}
+.icon-reload
+{
+	background: url('icons/reload.png') no-repeat;
+}
+.icon-search
+{
+	background: url('icons/search.png') no-repeat;
+}
+.icon-search1
+{
+	background: url('icons/search1.png') no-repeat;
+}
+.icon-print
+{
+	background: url('icons/print.png') no-repeat;
+}
+.icon-help
+{
+	background: url('icons/help.png') no-repeat;
+}
+.icon-undo
+{
+	background: url('icons/undo.png') no-repeat;
+}
+.icon-redo
+{
+	background: url('icons/redo.png') no-repeat;
+}
+.icon-back
+{
+	background: url('icons/back.png') no-repeat;
+}
+.icon-sum
+{
+	background: url('icons/sum.png') no-repeat;
+}
+.icon-tip
+{
+	background: url('icons/tip.png') no-repeat;
+}
+.icon-export
+{
+	background: url('icons/export.gif') no-repeat;
+}
+.icon-mergeaccount
+{
+   background: url('icons/mergeaccount.png') no-repeat;
+}
+.icon-config
+{
+	background: url('icons/config.png') no-repeat;
+}
+.icon-setting
+{
+	background: url('icons/setting.png') no-repeat;
+}
+.icon-group
+{
+	background: url('icons/group.png') 10px 0 no-repeat;
+}
+.icon-options
+{
+	background: url('icons/options.png') no-repeat;
+}
+.icon-clean{background: url('icons/clean.png') no-repeat}
+.icon-set{background: url('icons/set.png') no-repeat}
+.icon-filter{background: url('icons/4.png') no-repeat}
+.icon-chart{background: url('icons/2.png') no-repeat}
+.icon-detail{background: url('icons/3.png') no-repeat}
+.icon-sort{background: url('icons/5.png') no-repeat}
+.icon-find{background: url('icons/6.png') no-repeat}
+.icon-add-name{background: url('icons/add-name.png') no-repeat}
+.icon-add-price{background: url('icons/add-price.png') no-repeat}
+.icon-add-addr{background: url('icons/add-addr.png') no-repeat}
+.icon-add-std{background: url('icons/add-std.png') no-repeat}
+.icon-down{background: url('icons/down.png') no-repeat}
+.icon-up{background: url('icons/up.png') no-repeat}
+.icon-downall{background: url('icons/down-all.png') no-repeat}
+.icon-upall{background: url('icons/up-all.png') no-repeat}
+
+.m-btn-downarrow {
+  background: url('images/menu_arrows.png') no-repeat 2px center;
+}
+.m-btn-downarrow {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  _vertical-align: middle;
+}
+.tool-bar{ height:28px; background:url('images/tool-bar-bg.png') repeat-x;  padding-left:10px; position:relative;z-index:100; padding-top:5px}
+.searchbox{background: url('images/search-box-bg.png') no-repeat; width:150px;height:24px; display:inline-block;margin-top:0px}
+.search-input{border:none;width: 120px; color:#ccc;  _border:1px solid #fff;margin:5px 0 0 2px; background:#fff;}
+.searchbox-button {display:inline-block;background: url('images/searchbox_button.png') no-repeat left center;height:24px;width: 18px;overflow: hidden;display: inline-block;vertical-align: top;cursor: pointer;}
+.more-div{ position:absolute;top:30px;z-index:100000;left:201px; border:1px solid #e6e6e6; width:154px; background:#fff;_left:209px}
+.more-div a{ display:block; text-decoration:none; height:20px; line-height:20px;color:#000; font-size:12px}
+.more-div a span{ padding-right:30px}
+.more-div a:hover{ background:#55aad8; color:#fff}
+.icon-roule,.icon-list{}
+.ui-row-2{ background:#f7f7f7}
+.ui-row-1{background:#fff }
+
+/*右键菜单样式*/
+#jqContextMenu ul li s{ display:inline-block; width:16px; height:16px; vertical-align:middle; margin:0 6px; }
+#jqContextMenu ul li{ line-height:22px;}
+#jqContextMenu ul li span{ display:inline-block; height:22px;padding-left:8px;border-left:1px solid #ccc; width:63px}
+.line-top{border-top:1px solid #ccc}
+
+a.t-btn {
+  background-position: right 0;
+  font-size: 12px;
+  text-decoration: none;
+  display: inline-block;
+  zoom: 1;
+  height: 26px;
+  padding-right:8px;
+  cursor: pointer;
+  outline: none;
+}
+
+a.t-btn-disabled {
+  color: #ccc;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: default;
+}
+a.t-btn span.t-btn-left {
+  display: inline-block;
+  background-position: 0 -48px;
+  padding: 4px 0px 4px 8px;
+  line-height: 18px;
+  height: 18px;
+}
+a.t-btn-plain span.t-btn-left {
+  padding-left: 5px;
+}
+a.t-btn span span.t-btn-text {
+  display: inline-block;
+  vertical-align: baseline;
+  width: auto;
+  height: 16px;
+  line-height: 16px;
+  padding: 0;
+  margin: 0;
+}
+a.t-btn span span.t-btn-icon-left {
+  padding: 0 0 0 23px;
+
+}
+a.t-btn span span.t-btn-icon-right {
+  padding: 0 20px 0 0;
+
+}
+a.t-btn span span span.t-btn-empty {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+}
+a:hover.t-btn {
+  background:url(images/button_a_bg.gif) right center no-repeat;
+  outline: none;
+  text-decoration: none;
+}
+a:hover.t-btn span.t-btn-left {
+  background:url(images/button_span_bg.gif) left center no-repeat;
+}
+
+a.t-btn {
+  color: #444;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 6px 5px 5px 5px;
+}
+a.t-btn span.t-btn-left {
+}

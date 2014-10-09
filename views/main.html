@@ -1,0 +1,200 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/pager.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script type="text/javascript" >
+	$(function(){
+		$("#pager").pager({url:"/views/content.html",data:{type:'pagelist',pageIndex:1,pageCount:10}},function(data){
+			if(data){
+				$("#list").html("");
+				for(var s in data){
+
+					var user=getSelf(data[s].username);
+
+					var replaylist=getreplaylist(data[s]._id);
+					var self="";
+					
+					if(replaylist.length>0){
+						self=getSelf(replaylist[replaylist.length-1].username);
+					}
+						
+					var html='<li class="list-group-item">';
+					html+='<a href="#" onclick="targetuser(\''+data[s].username+'\')"><img title="'+data[s].username+'" src="'+user[0].src+'" style="width:40;height:40;margin-right:10px"></a>';
+					html+="<a href='#'  onclick='fun(\""+data[s]._id+"\",\""+data[s].username+"\")'>"+data[s].title+"</a>";
+					html+='<span style=" float:right;;margin-top:5px;">';
+					
+					if(self[0]){
+						html+='<a href="#" onclick="targetuser(\''+self[0].username+'\' )" ><img title="'+self[0].username+'" src="'+self[0].src+'" style="width:30;"></a>';
+						html+='<span style="margin-left:5px;">'+getDateTime(data[s].time)+'</span>';
+					}
+					html+='</span></li>';
+					$("#list").append(html);
+				}
+			}
+		});
+
+		$.ajax({   
+			type: 'post',  
+			dataType: 'html',  
+			url:'/views/top.html',                     
+			data : {1:1},  
+			success : function (data) { 
+				//console.log(data);
+				$("#top").append(data);
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(XMLHttpRequest.status);
+				console.log(XMLHttpRequest.readyState);
+				console.log(textStatus);
+			}
+		}); 
+		$.ajax({   
+			type: 'post',  
+			dataType: 'json',  
+			url:'/views/content.html',                     
+			data : {type:'unitereplay',get:"noreplay"},  
+			success : function (data) { 
+				var html="";
+				for(var i in data){
+					html+='<li title="'+data[i].username+'"><a onclick="fun(\''+data[i]._id+'\')" href="#">'+data[i].title+'</a></li>';
+				}
+				$("#noreplay").append(html);
+			}
+		}); 
+		$("#sub").on("click",function(){
+			window.location.href='/views/content.html';
+		});
+
+		$.ajax({
+			type: 'GET',
+			dataType: 'html',
+			url: '/views/main.html',
+			data: { type: "getself",username:getCookie("username")},
+			success: function (data) {
+				$("#user_msg").append(data);
+			},error:function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(XMLHttpRequest.status);
+				console.log(XMLHttpRequest.readyState);
+				console.log(textStatus);
+			}
+		});
+	})
+	function fun(id,username){
+		window.location.href='/views/content_info.html?id='+id+"&username="+username;
+	}
+	
+	 function targetuser(id){
+		window.location.href='/views/user_info.html?id='+escape(id);
+	 }
+	function getreplaylist(id) {
+            var result = "";
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                url: '/views/content_info.html',
+                data: { type: "getlist", contentid: id },
+                success: function (data) {
+                    if (data.length > 0) {
+                        result = data;
+                    }
+                }
+            });
+            return result;
+        }
+	function getSelf(username){
+		var result="#";
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',
+			cache:false, 
+			async:false,
+			url:'/views/set.html',                     
+			data : {type:"getSelf",username:username},
+			success : function (data) { 
+				if(data.length>=1)
+					result=data;
+			}  
+		}); 
+		return result;
+	}
+
+	function isStreamSupported() {
+	　　if (navigator.getUserMedia)
+	　　   return true;
+	　　else
+　　		return false;
+　　}
+	function admin(){
+		window.location.href='/views/manager.html?username='+escape(getCookie("username"));
+	}
+</script>
+<style type="text/css">
+	a {
+		margin-left:20px;
+	}
+	#menu,#noreplay { 
+		font:14px verdana, arial, sans-serif;
+		font-weight: 700;
+		float:right;
+		margin-right:150px;
+		padding:0; 
+		width:200px;
+	}
+	#menu li{
+		height:100%;
+		float:left;
+		padding:5;
+	}
+	li{
+	list-style:none;
+	}
+	#pager button{
+		margin-left:10px;
+	}
+</style>
+</head>
+<body > 
+<div id="top" style="height:40px; width:100%; margin-bottom:20px; background-color:#f5f5f5">
+
+</div>
+<div class="panel panel-default" style=" width:70%;float: left;">
+  <div class="panel-heading">当前话题</div>
+	<div class="panel-body">
+		<ul id="list" class="list-group">
+			
+		</ul>
+		<div id="pager" style=" width:70%; text-align:center;"></div>
+	</div>
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-heading">个人信息</div>
+  <div class="panel-body" id="user_msg">
+    
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-body">
+    <button id="sub">发表话题</button>
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-heading">无人回复的话题</div>
+  <div class="panel-body">
+    <ul id="noreplay"></ul>
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-heading">管理员通道</div>
+  <div class="panel-body">
+  	<button onclick="admin()">进入管理</button>
+  </div>
+</div>
+</body>
+</html>

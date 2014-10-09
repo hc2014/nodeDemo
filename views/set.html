@@ -1,0 +1,266 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.validate.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script type="text/javascript" >
+	$(function(){
+
+		$.ajax({   
+            type: 'post',  
+            dataType: 'html',  
+            url:'/views/top.html',                     
+            data : {1:1},  
+            success : function (data) { 
+                //console.log(data);
+                $("#top").append(data);
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                console.log(XMLHttpRequest.status);
+                console.log(XMLHttpRequest.readyState);
+                console.log(textStatus);
+            }
+        }); 
+		$("#btn_res").on("click",function(){
+			if($.trim($("#oldpwd").val())==""||$.trim($("#newpwd").val())==""||$.trim($("#rpwd").val())==""){
+				layer.msg('密码不能为空!', 2);
+				return;
+			}else{
+				$.ajax({  
+					type: 'POST',  
+					dataType: 'json',  
+					url:'/views/set.html',                     
+					data : {type:"setpwd",username:getCookie("username"),oldpwd:$("#oldpwd").val(),newpwd:$("#newpwd").val() },  
+					success : function (data) { 
+						if(data=="ok")
+						{
+							
+							alert("修改完成，跳转到登陆页面");
+							window.parent.location.href="/views/login.html";
+						}
+						else{
+							layer.msg('修改密码错误,请确认原密码是否正确！',4);
+						}
+					}  
+				});
+			}
+		});
+		$("#save").on("click",function(){
+			$.ajax({  
+				type: 'POST',  
+				dataType: 'json',  
+				url:'/views/set.html',                     
+				data : {type:"insertSelf",username:getCookie("username"),address:$("#address").val(),ss:$("#ss").val() },  
+				success : function (data) { 
+					if(data=="ok")
+					{
+						layer.msg("修改完成",1,2);
+					}
+					else{
+						layer.msg('修改出错！',4);
+					}
+				}  
+			});
+		});
+		$("#oldpwd").on("keypress",function(){
+			$(this).parent().next().text("");
+		});
+		$("#newpwd").on("keypress",function(){
+			$(this).parent().next().text("");
+		});
+		$("#rpwd").on("keypress",function(){
+			$(this).parent().next().text("");
+		});
+
+		$("#head").on("click",function(){
+			$("#file").click();
+
+			$('#file').change(function(){  
+               var data = new FormData();  
+               var files = $('#file')[0].files;  
+                 
+               if (files) {  
+                   data.append('codecsv',files[0]);  
+                }             
+                $.ajax({  
+                    cache: false,  
+                    type: 'post',  
+                    dataType: 'json',  
+                    url:'/views/upload.html',                     
+                    data : data,  
+                    contentType: false,  
+					processData: false,  
+                    success : function (data) { 
+                        fun(data);
+                    }  
+                });  
+            });
+		})
+		$("#username").val(getCookie("username"));
+
+
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/set.html',                     
+			data : {type:"userinfo",username:getCookie("username")},  
+			success : function (data) { 
+				$("#email").val(data[0].email);
+				$("#nickname").val(data[0].nickname);
+			}  
+		});
+
+
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/set.html',                     
+			data : {type:"getSelf",username:getCookie("username")},  
+			success : function (data) { 
+				$("#address").val(data[0].address);
+				$("#ss").val(data[0].ss);
+				$("#head").attr("src",data[0].src);
+			}  
+		});
+	})
+	function fun(src){
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/set.html',                     
+			data : {type:"insertSelf",username:getCookie("username"),src:src },  
+			success : function (data) { 
+				$("#head").attr("src",data); 
+			}  
+		});  
+	}
+	function check(obj){
+		var val=$(obj).val();
+		if($.trim(val)==""){
+			$(obj).parent().next().text("");
+			var html='<span style="color:red">密码不能为空</span>'
+			$(obj).parent().next().append(html);
+			return;
+		}
+		if($.trim(val).length<6){
+			$(obj).parent().next().text("");
+			var html='<span style="color:red">密码最少6位长</span>'
+			$(obj).parent().next().append(html);
+			return;
+		}
+		if($(obj).attr("id")=="newpwd"||$(obj).attr("id")=="rpwd"){
+			if($("#rpwd").val()!=$("#newpwd").val()){
+				$("#rpwd").parent().next().text("");
+				var html='<span style="color:red">两次输入的密码不一样</span>'
+				$("#rpwd").parent().next().append(html);
+				return;
+			}
+		}
+	}
+</script>
+<style type="text/css">
+	input[type=text],[type=password]{
+		width:300px;
+		margin-top:5px;
+	}
+	.col1{
+		text-align:right:
+		color:gray;
+	}
+
+	a {
+		margin-left:20px;
+	}
+	#menu { 
+		font:14px verdana, arial, sans-serif;
+		font-weight: 700;
+		float:right;
+		margin-right:150px;
+		padding:0; 
+		width:200px;
+	}
+	#menu li{
+		list-style:none;
+		height:100%;
+		float:left;
+		padding:5;
+	}
+</style>
+
+</head>
+<body> 
+<div id="top" style="height:40px; width:100%; margin-bottom:20px; background-color:#f5f5f5">
+
+</div>
+<div style=" width:70%; float:left;">
+<div class="panel panel-default" >
+  <div class="panel-heading">用户设置</div>
+  <div class="panel-body">
+   <table>
+			<tr>
+				<td >用户名:</td><td><input class="form-control input-sm"  disabled type="text" name="username" id="username"></td>
+			<tr>
+			<tr>
+				<td >昵称</td><td><input class="form-control input-sm"  disabled type="text" name="nickname" id="nickname"></td>
+			<tr>
+			<tr>
+				<td>电子邮件:</td><td><input class="form-control input-sm" type="text" disabled  name="pwd" id="email"></td>
+			</tr>
+			<tr>
+				<td>所在地点:</td><td><input type="text"  class="form-control input-sm" name="address" id="address"></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>个性签名:</td>
+				<td colspan="2"><textarea id="ss"  style="resize:none; margin-top:5px; height:100px" cols="50;" class="form-control input-sm" tyle="text"></textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan="2"><button class="btn btn-default" style=" margin-top:5px;background-color:#f5f5f5" id="save">保存设置</button></td>
+			</tr>
+		</table>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">修改密码</div>
+  <div class="panel-body">
+   <table id="setpwd">
+			<tr>
+				<td>原始密码:</td><td><input class="form-control input-sm" onblur="check(this)" type="password"  name="pwd" id="oldpwd"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>新密码:</td><td><input class="form-control input-sm" type="password" onblur="check(this)"  name="pwd" id="newpwd"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>确认密码:</td><td><input class="form-control input-sm" type="password" onblur="check(this)"  name="rpwd" id="rpwd"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" style=" text-align:right"><button class="btn btn-default" style=" margin-top:5px;background-color:#f5f5f5" id="btn_res">确定</button></td>
+				<td></td>
+			</tr>
+		</table>
+  </div>
+</div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-heading">个人信息</div>
+  <div class="panel-body">
+    <img title="点击上传头像" id="head" src="#" style=" width:50px;height:50px;">
+	<input id='file' accept=".jpg,.png,.jepg" style="display: none" type="file"> 
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-heading">个人信息</div>
+  <div class="panel-body">
+    aaaaa
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.validate.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/pager.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script type="text/javascript" >
+
+	$(function(){
+		var username = window.location.href.split('?')[1].split('=')[1];
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/set.html',                     
+			data : {type:"userinfo",username:unescape(username)},  
+			success : function (data) { 
+				$("#email").text(data[0].email);
+				$("#nickname").text(data[0].nickname);
+				$("#username").text(data[0].username);
+			}  
+		});
+
+		$.ajax({   
+            type: 'post',  
+            dataType: 'html',  
+            url:'/views/top.html',                     
+            data : {1:1},  
+            success : function (data) { 
+                //console.log(data);
+                $("#top").append(data);
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                console.log(XMLHttpRequest.status);
+                console.log(XMLHttpRequest.readyState);
+                console.log(textStatus);
+            }
+        }); 
+
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/set.html',                     
+			data : {type:"getSelf",username:username},  
+			success : function (data) { 
+				$("#address").text(data[0].address);
+				$("#ss").text(data[0].ss);
+				$("#head").attr("src",data[0].src);
+			}  
+		});
+
+		$("#pager").pager({url:"/views/content.html",data:{type:'pagelist',username:username,pageIndex:1,pageCount:10}},function(data){
+			if(data){
+				$("#list_no").html("");
+				for(var s in data){
+					var user=getSelf(username);
+
+					var replaylist=getreplaylist(data[s]._id);
+					var self="";
+					
+					if(replaylist.length>0){
+						self=getSelf(replaylist[replaylist.length-1].username);
+					}
+						
+					var html='<li class="list-group-item">';
+					html+='<a href="#" onclick="targetuser(\''+data[s].username+'\')"><img title="'+data[s].username+'" src="'+user[0].src+'" style="width:40;height:40;margin-right:10px"></a>';
+					html+="<a href='#' onclick='fun(\""+data[s]._id+"\")'>"+data[s].title+"</a>";
+					html+='<span style=" float:right;;margin-top:5px;">';
+					
+					if(self[0]){
+						html+='<a href="#" ><img title="'+self[0].username+'" src="'+self[0].src+'" style="width:30;"></a>';
+						html+='<span style="margin-left:5px;">'+getDateTime(data[s].time)+'</span>';
+					}
+					html+='</span></li>';
+					$("#list_no").append(html);
+				}
+			}
+		})
+		/*$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/content.html',                     
+			data : {type:"getlist",username:username},  
+			success : function (data) { 
+				for(var s in data){
+					var user=getSelf(username);
+
+					var replaylist=getreplaylist(data[s]._id);
+					var self="";
+					
+					if(replaylist.length>0){
+						self=getSelf(replaylist[replaylist.length-1].username);
+					}
+						
+					var html='<li class="list-group-item">';
+					html+='<a href="#" onclick="targetuser(\''+data[s].username+'\')"><img title="'+data[s].username+'" src="'+user[0].src+'" style="width:40;height:40;margin-right:10px"></a>';
+					html+="<a href='#' onclick='fun(\""+data[s]._id+"\")'>"+data[s].title+"</a>";
+					html+='<span style=" float:right;;margin-top:5px;">';
+					
+					if(self[0]){
+						html+='<a href="#" ><img title="'+self[0].username+'" src="'+self[0].src+'" style="width:30;"></a>';
+						html+='<span style="margin-left:5px;">'+getDateTime(data[s].time)+'</span>';
+					}
+					html+='</span></li>';
+					$("#list_no").append(html);
+				}
+			}
+		});*/
+
+		$("#sub").on("click",function(){
+			window.location.href='/views/content.html';
+		});
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',  
+			url:'/views/content.html',                     
+			data : {type:"unitereplay",username:username,get:"join"},  
+			success : function (data) { 
+				for(var s in data){
+					var user=getSelf(data[s].username);
+
+					var replaylist=getreplaylist(data[s]._id);
+					var self="";
+					
+					if(replaylist.length>0){
+						self=getSelf(replaylist[replaylist.length-1].username);
+					}
+						
+					var html='<li class="list-group-item">';
+					html+='<a href="#" onclick="targetuser(\''+data[s].username+'\')"><img title="'+data[s].username+'" src="'+user[0].src+'" style="width:40;height:40;margin-right:10px"></a>';
+					html+="<a href='#' onclick='fun(\""+data[s]._id+"\")'>"+data[s].title+"</a>";
+					html+='<span style=" float:right;;margin-top:5px;">';
+					
+					if(self[0]){
+						html+='<a href="#" ><img title="'+self[0].username+'" src="'+self[0].src+'" style="width:30;"></a>';
+						html+='<span style="margin-left:5px;">'+getDateTime(data[s].time)+'</span>';
+					}
+					html+='</span></li>';
+					$("#list_join").append(html);
+				}
+			}
+		});
+	});
+	function getreplaylist(id) {
+		var result = "";
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			cache: false,
+			async: false,
+			url: '/views/content_info.html',
+			data: { type: "getlist", contentid: id },
+			success: function (data) {
+				if (data.length > 0) {
+					result = data;
+				}
+			}
+		});
+		return result;
+	}
+	function getSelf(username){
+		var result="#";
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',
+			cache:false, 
+			async:false,
+			url:'/views/set.html',                     
+			data : {type:"getSelf",username:username},
+			success : function (data) { 
+				if(data.length>=1)
+					result=data;
+			}  
+		}); 
+		return result;
+	}
+</script>
+<style type="text/css">
+	a {
+		margin-left:20px;
+	}
+	#menu { 
+		font:14px verdana, arial, sans-serif;
+		font-weight: 700;
+		float:right;
+		margin-right:150px;
+		padding:0; 
+		width:200px;
+	}
+	#menu li{
+		list-style:none;
+		height:100%;
+		float:left;
+		padding:5;
+	}
+	#pager button{
+		margin-left:10px;
+	}
+</style>
+</head>
+<body> 
+<div id="top" style="height:40px; width:100%; margin-bottom:20px; background-color:#f5f5f5">
+</div>
+<div style=" width:70%; float:left;">
+<div class="panel panel-default" >
+  <div class="panel-heading">用户信息</div>
+  <div class="panel-body">
+	<img src="#" style=" width:40px;height:40px" id="head"><span id="username"></span>
+	<p>昵称:<span id="nickname"></span></p>
+	<p>邮箱:<span id="eamil"></span></p>
+	<p>所在地:<span id="address"></span></p>
+	<p>个性签名:<span id="ss"></span></p>
+  </div>
+</div>
+<div class="panel panel-default" >
+  <div class="panel-heading">最近创建的话题</div>
+  <div class="panel-body" id="div_create">
+	<ul id="list_no" class="list-group">
+			
+	</ul>
+	<div id="pager" style=" width:70%; text-align:center;"></div>
+  </div>
+</div>
+<div class="panel panel-default" >
+  <div class="panel-heading">参与的话题</div>
+  <div class="panel-body" id="div_join">
+<ul id="list_join" class="list-group">
+			
+		</ul>
+  </div>
+</div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-body">
+    <button id="sub">发表话题</button>
+  </div>
+</div>
+</body>
+</html>

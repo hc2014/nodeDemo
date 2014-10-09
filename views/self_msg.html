@@ -1,0 +1,27 @@
+<script type="text/javascript">
+$(function(){
+	$.ajax({  
+		type: 'POST',  
+		dataType: 'json',  
+		url:'/views/set.html',                     
+		data : {type:"getSelf",username:getCookie("username")},  
+		success : function (data) {
+			if(!!data[0]) {
+				$("#head").attr("src",data[0].src);
+				$("#address").text(data[0].address);
+				$("#ss").text(data[0].ss);
+				$("#self_username").text(data[0].username);
+			}
+		}  
+	});
+})
+</script>
+<style>
+	p{
+		margin-top:5px;
+	}
+</style>
+<img title="点击上传头像" id="head" src="#" style=" width:50px;height:50px;"><span id="self_username"></span>
+<input id='file' accept=".jpg,.png,.jepg" style="display: none" type="file"> 
+<p class="text-lowercase"><span>所在地:</span><span id="address"></span></p>
+<p><span>个性签名:</span><span id="ss"></span></p>

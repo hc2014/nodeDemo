@@ -1,0 +1,39 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript" >
+ $(function(){  
+            $('#file_upload').click(function(){  
+                 
+               var data = new FormData();  
+               var files = $('#file')[0].files;  
+                 
+               if (files) {  
+                   data.append('codecsv',files[0]);  
+                }             
+                $.ajax({  
+                    cache: false,  
+                    type: 'post',  
+                    dataType: 'json',  
+                    url:'/views/importExcel.html',                     
+                    data : data,  
+                    contentType: false,  
+					processData: false,  
+                    success : function (data) {  
+                          alert(data);
+                    }  
+                });  
+            });  
+              
+        })
+
+</script>
+</head>
+<body>
+	<input id='file' type="file">  
+    <input id='file_upload' type="button" value="upload">  
+	<input id='file_import' type="button" value="导入">
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" >
+function test(evt){
+    var clipboardData = evt.clipboardData;
+    for(var i=0; i<clipboardData.items.length; i++){
+        var item = clipboardData.items[i];
+        if(item.kind=='file'&&item.type.match(/^image\//i)){
+            //blob就是剪贴板中的二进制图片数据
+            var blob = item.getAsFile(),reader = new FileReader();
+            //定义fileReader读取完数据后的回调
+            reader.onload=function(){
+                var sHtml='<img src="'+event.target.result+'">';//result应该是base64编码后的图片
+                document.getElementById('mydiv').innerHTML += sHtml;
+            }
+            reader.readAsDataURL(blob);//用fileReader读取二进制图片，完成后会调用上面定义的回调函数
+        }
+    }
+}
+</script>
+</head>
+<body>
+<div id="mydiv" onpaste="test(event)"  contentEditable=true style=" width:400px;height:300px; border:1px solid gray; float:left"></div>
+
+</body>
+</html>

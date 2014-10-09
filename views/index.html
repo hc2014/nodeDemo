@@ -1,0 +1,76 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script type="text/javascript" >
+	var iframe=window.parent.document.getElementById("main_iframe");
+	$(function(){
+		
+		$(iframe).height(2000);
+
+		$.ajax({   
+			type: 'post',  
+			dataType: 'json',  
+			url:'/views/content.html',                     
+			data : {type:'getlist'},  
+			success : function (data) { 
+				for(var s in data){
+					var user=getSelf(data[s].username);
+					var html='<li class="list-group-item">';
+					html+='<a href="#"><img title="'+data[s].username+'" src="'+user[0].src+'" style="width:40;height:40;margin-right:10px"></a>';
+					html+="<a href='#' onclick='fun(\""+data[s]._id+"\")'>"+data[s].title+"</a>";
+					html+='<span style=" float:right;;margin-top:5px;">';
+					html+='<a href="#" ><img src="#" style="width:25;"></a>';
+					html+='<span style="margin-left:5px;">'+getDateTime(data[s].time)+'</span></span></li>';
+					$("#list").append(html);
+				}
+			}
+		}); 
+
+		$("#sub").on("click",function(){
+			$(iframe).attr("src","/views/content.html");
+		});
+	})
+	function fun(id){
+		$(iframe).attr("src","/views/content_info.html?id="+id);
+	}
+
+	function getSelf(username){
+		var result="#";
+		$.ajax({  
+			type: 'POST',  
+			dataType: 'json',
+			cache:false, 
+			async:false,
+			url:'/views/set.html',                     
+			data : {type:"getSelf",username:username},
+			success : function (data) { 
+				if(data.length>=1)
+					result=data;
+			}  
+		}); 
+		return result;
+	}
+</script>
+</head>
+<body > 
+<div class="panel panel-default" style=" width:70%;float: left;">
+  <div class="panel-heading">当前话题</div>
+	<div class="panel-body">
+		<ul id="list" class="list-group">
+			
+		</ul>
+	</div>
+  </div>
+</div>
+<div class="panel panel-default" style=" width:28%;float: right;">
+  <div class="panel-body">
+    <button id="sub">发表</button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+<script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<script type="text/javascript" >
+	function login()
+	{	
+		$.ajax({
+		  type: 'POST',
+		  url: '/views/login.html',
+		  data: { username:$("#username").val(),pwd:$("#pwd").val() },
+		  success: function(data){
+		  	
+			if(eval(data)=="ok"){
+				 window.location.href="/views/main.html";
+			}
+			 else
+				layer.alert('登陆信息有误!', 3); 
+		  },
+		  error:function(err)
+			{
+				console.log(err);
+			},
+		  dataType: 'text'
+		});
+	}
+	function setPwd(){
+		window.location.href="/views/mailer.html";
+	}
+	function register(){
+		window.location.href="/views/register.html";
+	}
+</script>
+<style type="text/css">
+    label.error
+	{
+		color: Red;
+		padding-left: 20px;
+	}
+	button{
+		margin-top:5px;
+		margin-left:10px;
+	}
+ </style>
+</head>
+<body >
+	<fieldset style="width:400px; margin:200px auto;padding-left: 10px">
+    <legend>用户登录</legend>
+	<div class="input-group">
+		<span class="input-group-addon">账号:</span>
+		<input style=" width:200px" class="form-control input-sm" name="username" id="username" type="text" />
+	</div>
+	<div class="input-group" style=" margin-top:10px">
+		<span class="input-group-addon">密码:</span>
+		<input style=" width:200px"  class="form-control input-sm" name="pwd" id="pwd" type="password" />
+	</div>
+	 <span style="float:right; margin-right:50px"><button name="login" id="login" onclick="login()">登录</button>
+	 <button name="register" id="register" onclick="register()">注册</button><a href="#" onclick="setPwd()" style="margin-left:15px;margin-right:10px">找回密码</a>
+	 </span>
+  </fieldset>
+</body>
+</html>

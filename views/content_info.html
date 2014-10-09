@@ -1,0 +1,254 @@
+<html>
+<head>
+    <script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/tool.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/layer.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script type="text/javascript">
+        var parames= window.location.href.split('?')[1].split('&');
+        console.log(window.location.href);
+        var contentid = parames[0].split('=')[1].substring(0,24);
+        var username=parames[1].split('=')[1];
+		var replayid="";
+        var socket = io.connect('http://localhost:3000');
+		var Max=0;
+        socket.on('replay', function (data) {
+			replayid="";//清除  已经记录的ID
+			var src="#";
+			$("#txt_content").val("");
+			//layer.msg("发表成功",2,1);
+			
+			var self=getself(data.username);
+			if(self[0])
+				src=self[0].src;
+           if(data.replayid==""){
+				var html='<div style="width: 40; height: 40; float: left; margin-bottom:10px"><a href="#">';
+				html+='<img src="'+src+'" style="width: 40px; height: 40;"></a></div>';
+				html+='<div style="width: 850px; float: right;">'+unescape(data.replaytxt)+'<div style="margin-right: 200px;"></div>';
+				html+='<span style="float: right"><a href="#txt_content"  onclick="fun(this)" title="回复" id="'+data._id+'"><img src="/img/replay.jpg"></a><a style=" margin-right:5px;">'+getDateTime(data.time)+'</a>'+(Number(Max)+1)+'楼</span></div><hr style="1px solid; width:100%;" id="hr_'+data._id+'_main" />';
+				Max++;
+				$("#replay_list").append(html);
+		   }else{
+			  
+				var html='<div style=" margin-left:80px"><div style="width:40; height: 40; float: left; margin-bottom:10px"><a href="#">';
+				html+='<img src="'+src+'" style="width: 40px; height: 40;"></a></div>';
+				html+='<div style="float:right; width:750px">'+unescape(data.replaytxt);
+				if($("hr[id^=hr_"+data.replayid+"]").length>1){
+					html+='<span style="float: right"><a style=" margin-right:5px;">'+getDateTime(data.time)+'</a></span></div><hr id="hr_'+data.replayid+'_'+(Number($("hr[id^=hr_"+data.replayid+"]").legnth)+1)+'" style="1px solid; width:100%;" /></div>';
+					$("hr[id^=hr_"+data.replayid+"]:last").parent().after(html);
+				}else{
+					html+='<span style="float: right"><a style=" margin-right:5px;">'+getDateTime(data.time)+'</a></span></div><hr id="hr_'+data.replayid+'_1" style="1px solid; width:100%;" /></div>';
+					$("hr[id=hr_"+data.replayid+"_main]").after(html);
+				}
+		   }
+		
+        });
+        $(function () {
+
+            $.ajax({   
+                type: 'post',  
+                dataType: 'html',  
+                url:'/views/top.html',                     
+                data : {1:1},  
+                success : function (data) { 
+                    //console.log(data);
+                    $("#top").append(data);
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log(XMLHttpRequest.status);
+                    console.log(XMLHttpRequest.readyState);
+                    console.log(textStatus);
+                }
+            }); 
+           $.ajax({
+                type: 'GET',
+                dataType: 'html',
+                url: '/views/main.html',
+                data: { type: "getself",username:username},
+                success: function (data) {
+                    $("#user_msg").append(data);
+                },error:function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log(XMLHttpRequest.status);
+                    console.log(XMLHttpRequest.readyState);
+                    console.log(textStatus);
+                }
+            });
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: '/views/content.html',
+                data: { type: 'getlist', contentid: contentid },
+                success: function (data) {
+                    if (data.length >= 1) {
+                        $("#title").html(data[0].title);
+                        $("#content").html(data[0].content);
+						$("#content").append('</br><span style="float: right"><button style="margin-right:20px" onclick="collect()">关注作者</button><button onclick="collect()">加为收藏</button></span>');
+                        var replaylist = getreplaylist();
+                        for (var s in replaylist) {
+							var count=replaylist.length;
+							var self=getself(replaylist[s].username);
+							var src="#";
+							if(self[0])
+								src=self[0].src;
+							var html='<div style="width: 40; height: 40; float: left; margin-bottom:10px"><a href="#">';
+								html+='<img src="'+src+'" style="width: 40px; height: 40;"></a></div>';
+								html+='<div style="width: 850px; float: right;">'+unescape(replaylist[s].replaytxt);
+								html+='<span style="float: right"><a href="#txt_content"  onclick="fun(this)" title="回复" id="'+replaylist[s]._id+'"><img src="/img/replay.jpg"></a><a style=" margin-right:5px;">'+getDateTime(replaylist[s].time)+'</a>'+(Number(s)+1)+'楼</span></div><hr style="1px solid; width:100%;" id="hr_'+replaylist[s]._id+'_main" />';
+								Max=(Number(s)+1);
+								var info=getreplaylist_info(replaylist[s]._id);
+								for(var i in info){
+									count++;
+									var _self=getself(info[i].username);
+									if(_self[0])
+										src=_self[0].src;
+									html+='<div style=" margin-left:80px"><div style="width:40; height: 40; float: left; margin-bottom:10px"><a href="#">';
+									html+='<img src="'+src+'" style="width: 40px; height: 40;"></a></div>';
+									html+='<div style="float:right; width:750px">'+unescape(info[i].replaytxt);
+									html+='<span style="float: right"><a style=" margin-right:5px;">'+getDateTime(info[i].time)+'</a></span></div><hr id="hr_'+replaylist[s]._id+'_'+(Number(i)+1)+'" style="1px solid; width:100%;" /></div>';
+								}
+								
+							$("#replay_list").append(html);
+							$("#count").html(Number(count)+"个回复");
+                        }
+                    }
+                }
+            });
+
+			$("#btn_clear").on("click",function(){
+				replayid="";
+			    $("#txt_content").val("");
+			});
+        })
+		function getself(username){
+			var result = "";
+			$.ajax({  
+				type: 'POST',  
+				dataType: 'json',
+				cache: false,
+				async: false,
+				url:'/views/set.html',                     
+				data : {type:"getSelf",username:username},  
+				success : function (data) { 
+					result=data;
+				}  
+			});
+			return result;
+		}
+
+        //加为收藏
+        function collect(){
+            alert("这个功能还没做!");
+        }
+		function getreplaylist_info(id){
+			var result = "";
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				cache: false,
+				async: false,
+				url: '/views/content_info.html',
+				data: { type: 'getlist', username: getCookie("username"),replayid:id },
+				success: function (data) {
+					if (data.length > 0) {
+						result = data;
+					}
+				}
+			});
+			return result;
+		}
+        function getreplaylist() {
+            var result = "";
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                url: '/views/content_info.html',
+                data: { type: "getlist", contentid: contentid },
+                success: function (data) {
+                    if (data.length > 0) {
+                        result = data;
+                    }
+                }
+            });
+            return result;
+        }
+		function fun(obj){
+			replayid=$(obj).attr("id");
+			$("#txt_content").focus();
+		}
+        function replay() {
+
+            socket.emit('replay', {
+                contentid: contentid,
+                replayid: replayid,
+                username: getCookie("username"),
+                replaytxt: escape($("#txt_content").val()),
+                time: new Date()
+            });
+        }
+    </script>
+    <style type="text/css">
+        a
+        {
+            margin-left: 20px;
+        }
+
+        #menu
+        {
+            font: 14px verdana, arial, sans-serif;
+            font-weight: 700;
+            float: right;
+            margin-right: 150px;
+            padding: 0;
+            width: 200px;
+        }
+
+            #menu li
+            {
+                list-style: none;
+                height: 100%;
+                float: left;
+                padding: 5;
+            }
+    </style>
+</head>
+<body>
+    <div id="top" style="height: 40px; width: 100%; margin-bottom: 20px; background-color: #f5f5f5">
+
+
+    </div>
+    <div class="panel panel-default" style="width: 70%; float: left; margin-left: 20px">
+        <div class="panel-heading" id="title"></div>
+        <div class="panel-body" id="content">
+
+        </div>
+
+    </div>
+    <div class="panel panel-default" style=" width:28%;float: right;">
+      <div class="panel-heading">作者信息</div>
+          <div class="panel-body" id="user_msg">
+            
+          </div>
+    </div>  
+    <div class="panel panel-default" style="width: 70%; float: left; margin-left: 20px">
+        <div class="panel-heading" id="count"></div>
+        <div class="panel-body" id="replay_list">
+			
+        </div>
+    </div>
+    <div class="panel panel-default" style="width: 70%; float: left; margin-left: 20px">
+        <div class="panel-heading">添加回复</div>
+        <div class="panel-body">
+            <textarea class="form-control" id="txt_content" rows="10" style="resize: none; margin-top: 10px" placeholder="说点什么吧"></textarea>
+			<span style="margin-top: 10px; float: right;">
+			<button class="btn btn-default" onclick="clear()"  id="btn_clear">取消</button>
+            <button class="btn btn-primary" onclick="replay()"  id="btn_publish">发表</button>
+			</span>
+        </div>
+    </div>
+    
+</body>
+</html>
