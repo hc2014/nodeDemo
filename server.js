@@ -110,7 +110,7 @@ app.post('/views/mailer.html',function(req,res){
 		        body: "你好! 你的新密码为123456，请自行修改密码",
 		        authentication : "login",
 		        username : "1340454919",//这里需要加密处理
-		        password : "hc000000",//这里需要加密处理
+		        password : "*******",//这里需要加密处理
 		        debug: true
 		    },
 		    function(err, result){
