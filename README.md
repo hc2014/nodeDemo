@@ -2,7 +2,14 @@ nodeDemo
 ========
 **Node的练习代码**
 做的是一个类似于论坛的东西
-
+###主要功能和技术
+* 常规的发帖回复、点赞
+* 邮箱验证
+* express+ejs
+* socket.io
+* 日志记录(log4)
+* mongodb数据库
+* office文档的处理(excel,word)
 ###主要用到的模块:
 *    "express":"4.5.1"
 *		,"ejs":"1.0.0"
