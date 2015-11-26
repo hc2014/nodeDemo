@@ -10,6 +10,7 @@ nodeDemo
 * 日志记录(log4)
 * mongodb数据库
 * office文档的处理(excel,word)
+
 ###主要用到的模块:
 *    "express":"4.5.1"
 *		,"ejs":"1.0.0"
