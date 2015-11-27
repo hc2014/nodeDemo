@@ -3,11 +3,12 @@ nodeDemo
 **Node的练习代码**
 做的是一个类似于论坛的东西
 ###主要功能和技术
-* 常规的发帖回复、点赞
+* 发帖、回复、点赞等论坛常见功能
 * 邮箱验证
-* express+ejs
-* socket.io
+* express+ejs+bootstrap
+* socket.io(回复功能中用到，实现了事实更新页面)
 * 日志记录(log4)
+* session+cookie(用户是否登陆验证、登陆超时)
 * mongodb数据库
 * office文档的处理(excel,word)
 
